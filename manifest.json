@@ -1,0 +1,7 @@
+{
+  "name": "fest-kasse",
+  "short_name": "fest-kasse",
+  "description": "fest-kasse",
+  "start_url": "/",
+  "display": "standalone"
+}

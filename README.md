@@ -1,5 +1,8 @@
 # fest-kasse
 
+- badges mit der anzahl
+- zeigt artieklname und preis
+
 
 ## url of demo project
 

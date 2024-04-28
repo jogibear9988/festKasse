@@ -1,0 +1,1 @@
+navigator.serviceWorker.register("./runtime-worker.js");

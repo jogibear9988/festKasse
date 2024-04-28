@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" style="height: 100%;">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="./manifest.json">
+
+  <title>fest-kasse</title>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "signal-polyfill": "./node_modules/signal-polyfill/dist/index.js",
+        "@node-projects/base-custom-webcomponent/": "./node_modules/@node-projects/base-custom-webcomponent/",
+        "@node-projects/base-custom-webcomponent": "./node_modules/@node-projects/base-custom-webcomponent/dist/index.js"
+      }
+    }
+  </script>
+
+  <script type="module" src="@node-projects/base-custom-webcomponent"></script>
+  <script type="module" src="./dist/runtime.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', 'Noto', sans-serif;
+      line-height: 1.5;
+      background-color: white;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      height: 100%;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div>fest-kasse <button>EDIT</button></div>
+</body>
+
+<script>
+</script>
+
+</html>

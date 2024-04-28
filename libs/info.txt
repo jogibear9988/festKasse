@@ -1,0 +1,2 @@
+https://github.com/NielsLeenheer/WebBluetoothReceiptPrinter
+https://github.com/NielsLeenheer/ThermalPrinterEncoder

@@ -1,0 +1,39 @@
+{
+  "name": "fest-kasse",
+  "version": "1.0.0",
+  "description": "festKasse",
+  "type": "module",
+  "scripts": {
+    "tsc": "tsc",
+    "start": "web-dev-server --open",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jogibear9988/festKasse.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jogibear9988/festKasse/issues"
+  },
+  "homepage": "https://github.com/jogibear9988/festKasse#readme",
+  "dependencies": {
+    "@adobe/css-tools": "^4.3.3",
+    "@node-projects/base-custom-webcomponent": "^0.26.1",
+    "@node-projects/lean-he-esm": "^3.3.0",
+    "@node-projects/node-html-parser-esm": "^6.2.0",
+    "@node-projects/web-component-designer": "^0.1.127",
+    "@node-projects/web-component-designer-codeview-monaco": "^0.1.25",
+    "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.10",
+    "@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.4",
+    "@node-projects/web-component-designer-widgets-wunderbaum": "^0.1.16",
+    "mobile-drag-drop": "^3.0.0-rc.0",
+    "monaco-editor": "^0.48.0",
+    "typescript": "^5.4.5",
+    "wunderbaum": "^0.8.3"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.4.4"
+  }
+}

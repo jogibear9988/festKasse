@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" style="height: 100%;">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="./manifest.json">
+
+  <title>fest-kasse</title>
+
+  <script type="importmap-shim">
+    {
+      "imports": {
+        "ag-grid-community": "./node_modules/ag-grid-community/dist/package/main.esm.min.mjs",
+        "signal-polyfill": "./node_modules/signal-polyfill/dist/index.js",
+        "monaco-editor/": "./node_modules/monaco-editor/",
+        "monaco-editor": "./node_modules/monaco-editor/esm/vs/editor/editor.main.js",
+        "@adobe/css-tools": "./node_modules/@adobe/css-tools/dist/index.mjs",
+        "dock-spawn-ts/": "./node_modules/dock-spawn-ts/",
+        "@node-projects/base-custom-webcomponent/": "./node_modules/@node-projects/base-custom-webcomponent/",
+        "@node-projects/base-custom-webcomponent": "./node_modules/@node-projects/base-custom-webcomponent/dist/index.js",
+        "@node-projects/web-component-designer": "./node_modules/@node-projects/web-component-designer/dist/index.js",
+        "@node-projects/web-component-designer/": "./node_modules/@node-projects/web-component-designer/",
+        "@node-projects/lean-he-esm/": "./node_modules/@node-projects/lean-he-esm/",
+        "@node-projects/node-html-parser-esm": "./node_modules/@node-projects/node-html-parser-esm/dist/index.js",
+        "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "./node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/dist/service/htmlParserService/NodeHtmlParserService.js",
+        "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/": "./node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/",
+        "@node-projects/web-component-designer-codeview-monaco": "./node_modules/@node-projects/web-component-designer-codeview-monaco/dist/widgets/codeView/code-view-monaco.js",
+        "@node-projects/web-component-designer-codeview-monaco/": "./node_modules/@node-projects/web-component-designer-codeview-monaco/",
+        "@node-projects/web-component-designer-stylesheetservice-css-tools": "./node_modules/@node-projects/web-component-designer-stylesheetservice-css-tools/dist/service/stylesheetservice/CssToolsStylesheetService.js",
+        "@node-projects/web-component-designer-stylesheetservice-css-tools/": "./node_modules/@node-projects/web-component-designer-stylesheetservice-css-tools/"
+      }
+    }
+  </script>
+  <script type="esms-options">
+    {
+      "shimMode": true
+    }
+  </script>
+  <script src="./node_modules/es-module-shims/dist/es-module-shims.js"></script>
+
+  <link rel="stylesheet" href="./node_modules/dock-spawn-ts/lib/css/dock-manager-context-menu.css">
+
+  <!-- Drag/Drop support on touch devices -->
+  <link rel="stylesheet" href="./node_modules/mobile-drag-drop/default.css">
+  <script src="./node_modules/mobile-drag-drop/index.js"></script>
+
+  <!-- if you use Moacco Editor -->
+  <script src="./node_modules/monaco-editor/min/vs/loader.js"></script>
+  <script>
+    require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs', 'vs/css': { disabled: true } } });
+    require(['vs/editor/editor.main'], () => { });    
+  </script>
+
+  <script type="module">
+    importShim('./node_modules/@node-projects/web-component-designer/dist/index.js');
+    importShim('./dist/config/config.js');
+  </script>
+
+  <style>
+    @font-face {
+      font-family: 'RobotoCn';
+      src: url('./assets/Roboto-BoldCondensed.woff2') format('woff2'),
+        url('./assets/Roboto-BoldCondensed.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    body {
+      font-family: 'RobotoCn';
+      -webkit-font-smoothing: antialiased;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      background-color: #2f3545;
+    }
+
+    #head {
+      height: 30px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    dock-spawn-ts {
+      height: calc(100% - 30px);
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="head">
+    <button id="save">save</button>
+  </div>
+  <dock-spawn-ts id="dock">
+    <div style="height: 100%;" id="attributeDock" title="Properties" dock-spawn-dock-type="right"
+      dock-spawn-dock-ratio="0.2">
+      <node-projects-web-component-designer-property-grid-with-header
+        id="propertyGrid"></node-projects-web-component-designer-property-grid-with-header>
+    </div>
+
+    <div style="height: 100%;" dock-spawn-dock-type="down" dock-spawn-dock-ratio="0.25"
+      dock-spawn-dock-to="attributeDock">
+      <node-projects-palette-view name="palette" id="palette" style="height: 100%;"></node-projects-palette-view>
+    </div>
+
+    <div style="height: 100%;" id="lower" title="stylesheet.css" dock-spawn-dock-type="down"
+      dock-spawn-dock-ratio="0.25" style="overflow: hidden; width: 100%;">
+      <node-projects-style-editor id="styleEditor"></node-projects-style-editor>
+    </div>
+  </dock-spawn-ts>
+
+</body>
+
+</html>

@@ -14,17 +14,13 @@ export async function printOnPrinter(article: IArticle) {
                 alert(`Connected to ${device.name} (#${device.id})`)
                 console.log(`Connected to ${device.name} (#${device.id})`);
                 printerLanguage = device.language;
-                printerCodepageMapping = device.codepageMapping;
+                printerCodepageMapping = device.codepageMapping ;
             });
-            alert('connect')
             await receiptPrinter.connect();
-            alert('connected')
         }
-        alert('printerLanguage' + printerLanguage)
-        alert('printerCodepageMapping' + printerCodepageMapping)
         const encoder = new ThermalPrinterEncoder({
-            language: printerLanguage,
-            codepageMapping: printerCodepageMapping
+            language: printerLanguage ?? 'esc-pos',
+            codepageMapping: printerCodepageMapping ?? 'zjiang'
         });
         let data = encoder
             //@ts-ignore

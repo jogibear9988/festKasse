@@ -12,15 +12,12 @@ export async function printOnPrinter(article: IArticle) {
             receiptPrinter = new WebBluetoothReceiptPrinter();
             receiptPrinter.addEventListener('connected', device => {
                 console.log(`Connected to ${device.name} (#${device.id})`);
-
                 printerLanguage = device.language;
                 printerCodepageMapping = device.codepageMapping;
             });
-
             await receiptPrinter.connect();
         }
-
-        let encoder = new ThermalPrinterEncoder({
+        const encoder = new ThermalPrinterEncoder({
             language: printerLanguage,
             codepageMapping: printerCodepageMapping
         });
@@ -39,7 +36,6 @@ export async function printOnPrinter(article: IArticle) {
             .newline()
             .cut()
             .encode();
-
         await receiptPrinter.print(data);
     } catch (err) {
         console.error(err);

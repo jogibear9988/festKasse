@@ -48,7 +48,7 @@
   <script src="./node_modules/mobile-drag-drop/index.js"></script>
   <script>
     MobileDragDrop.polyfill({
-      forceApply: true
+      forceApply: !!(navigator.maxTouchPoints && navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome'))
     });
   </script>
 

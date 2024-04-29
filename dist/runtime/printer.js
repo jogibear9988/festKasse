@@ -9,12 +9,17 @@ export async function printOnPrinter(article) {
         if (!receiptPrinter) {
             receiptPrinter = new WebBluetoothReceiptPrinter();
             receiptPrinter.addEventListener('connected', device => {
+                alert(`Connected to ${device.name} (#${device.id})`);
                 console.log(`Connected to ${device.name} (#${device.id})`);
                 printerLanguage = device.language;
                 printerCodepageMapping = device.codepageMapping;
             });
+            alert('connect');
             await receiptPrinter.connect();
+            alert('connected');
         }
+        alert('printerLanguage' + printerLanguage);
+        alert('printerCodepageMapping' + printerCodepageMapping);
         const encoder = new ThermalPrinterEncoder({
             language: printerLanguage,
             codepageMapping: printerCodepageMapping
@@ -37,6 +42,7 @@ export async function printOnPrinter(article) {
         await receiptPrinter.print(data);
     }
     catch (err) {
+        alert(err);
         console.error(err);
     }
 }

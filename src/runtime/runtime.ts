@@ -18,5 +18,7 @@ for (const art of applicationConfig.articles)
     applicationState.articles.set(art.key, new Signal.State(0));
 
 const screen = applicationConfig.screens[0];
-shadowRoot.adoptedStyleSheets = [cssFromString(screen.style)];
-shadowRoot.innerHTML = screen.html;
+if (screen) {
+    shadowRoot.adoptedStyleSheets = [cssFromString(screen?.style ?? '')];
+    shadowRoot.innerHTML = screen?.html ?? '';
+}

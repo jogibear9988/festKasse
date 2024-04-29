@@ -11,12 +11,17 @@ export interface IScreen {
 }
 
 export interface IPrintConfig {
-    printHeader: string,
-    printFooter: string
+    printHeader?: string,
+    printFooter?: string
+}
+
+export interface IConfig {
+    currency : string
 }
 
 export interface IStorageData {
     articles: IArticle[],
     screens: IScreen[],
     printConfig: IPrintConfig,
+    config: IConfig,
 }

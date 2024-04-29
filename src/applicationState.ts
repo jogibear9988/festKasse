@@ -9,4 +9,4 @@ class ApplicationState {
     articles = new Map<string, Signal.State<number>>();
 }
 
-export const aplicationState = new ApplicationState()
+export const applicationState = new ApplicationState()

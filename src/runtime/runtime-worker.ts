@@ -20,18 +20,16 @@ interface FetchEvent extends ExtendableEvent {
 
 const cacheName = 'fest-kasse';
 const contentToCache = [
-  '/pwa-examples/js13kpwa/',
-  '/pwa-examples/js13kpwa/index.html',
-  '/pwa-examples/js13kpwa/app.js',
-  '/pwa-examples/js13kpwa/style.css',
-  '/pwa-examples/js13kpwa/icons/icon-512.png',
+  '/',
+  '/index.html',
+  '/dist/runtime/runtime-worker.js',
 ];
 self.addEventListener('install', (e: ExtendableEvent) => {
   console.log('[Service Worker] Install');
   e.waitUntil((async () => {
-    const cache = await caches.open(cacheName);
-    console.log('[Service Worker] Caching all: app shell and content');
-    await cache.addAll(contentToCache);
+    //const cache = await caches.open(cacheName);
+    //console.log('[Service Worker] Caching all: app shell and content');
+    //await cache.addAll(contentToCache);
   })());
 });
 

@@ -19,14 +19,25 @@
       }
     }
   </script>
+  <script src="./node_modules/es-module-shims/dist/es-module-shims.js"></script>
 
-  <script type="module" src="@node-projects/base-custom-webcomponent"></script>
-  <script type="module" src="./dist/runtime.js"></script>
-
+  <script type="module">
+    importShim('@node-projects/base-custom-webcomponent');
+    importShim('./dist/runtime/runtime.js');
+  </script>
   <style>
+    @font-face {
+      font-family: 'RobotoCn';
+      src: url('./assets/Roboto-BoldCondensed.woff2') format('woff2'),
+        url('./assets/Roboto-BoldCondensed.woff') format('woff');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
     body {
       margin: 0;
-      font-family: 'Roboto', 'Noto', sans-serif;
+      font-family: 'RobotoCn';
       line-height: 1.5;
       background-color: white;
       -webkit-font-smoothing: antialiased;
@@ -34,11 +45,27 @@
       height: 100%;
     }
 
+    #head {
+      height: 25px;
+    }
+    
+    #edit {
+      position: absolute;
+      right: 2px;
+      top: 2px;
+    }
+
+    #container {
+      width: 100%;
+      height: calc(100% - 25px);
+    }
   </style>
 </head>
 
 <body>
-  <div>fest-kasse <button>EDIT</button></div>
+  <button id="edit">EDIT</button>
+  <div id="head">fest-kasse</div>
+  <div id="container"></div>
 </body>
 
 <script>

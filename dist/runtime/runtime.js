@@ -3,7 +3,7 @@ import { applicationConfig } from '../applicationConfig.js';
 import { cssFromString } from '@node-projects/base-custom-webcomponent';
 import { applicationState } from '../applicationState.js';
 import { Signal } from 'signal-polyfill';
-navigator.serviceWorker.register("./runtime-worker.js");
+//navigator.serviceWorker.register("./runtime-worker.js");
 const edit = document.getElementById('edit');
 edit.onclick = () => {
     document.location = "config.html";

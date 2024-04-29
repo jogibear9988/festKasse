@@ -2,12 +2,14 @@ import { BaseCustomWebComponentConstructorAppend, html, css } from '@node-projec
 import { Signal } from "signal-polyfill";
 import { applicationState } from '../applicationState.js';
 import { effect } from '../effect.js';
+import { applicationConfig } from '../applicationConfig.js';
+import { printOnPrinter } from '../runtime/printer.js';
 
 export class ActionButton extends BaseCustomWebComponentConstructorAppend {
 
     static readonly template = html`
         <div>
-            <div>STORNO</div>
+            <div id="main"></div>
         </div>
     `;
 
@@ -16,21 +18,7 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
             box-sizing: border-box;
             position: relative;
         }
-        #badge {
-            color: black;
-            position: absolute;
-            right: -5px;
-            bottom: -5px;
-            border-radius: 50%;
-            background: lime;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            aspect-ratio: 1;
-            font-weight: 900;
-            font-size: 14px;
-            width: 20px;
-        }`;
+        `;
 
     static readonly is = 'action-button';
 
@@ -38,27 +26,64 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
         action: String
     }
 
-    public action: 'storno' | 'clear'
+    static observedAttributes = ["action"];
+
+    get action(): 'storno' | 'clear' {
+        return <any>this.getAttribute('action');
+    }
+    set action(value: 'storno' | 'clear') {
+        this.setAttribute('action', value);
+    }
+
+    private _main: HTMLDivElement;
 
     constructor() {
         super();
         super._restoreCachedInititalValues();
 
-        this.onclick = () => {
-            applicationState.storno.set(!applicationState.storno.get());
-        }
-
-        effect(() => {
-            if (applicationState.storno.get())
-                this.setAttribute('active', "");
-            else
-                this.removeAttribute('active');
-        })
+        this._main = this._getDomElement<HTMLDivElement>('main')
     }
 
     ready() {
         this._parseAttributesToProperties();
         this._assignEvents();
     }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'action') {
+            if (newValue === 'storno') {
+                this._main.textContent = 'STORNO';
+                this.onclick = () => {
+                    applicationState.storno.set(!applicationState.storno.get());
+                }
+                effect(() => {
+                    if (applicationState.storno.get())
+                        this.setAttribute('active', "");
+                    else
+                        this.removeAttribute('active');
+                });
+            } else if (newValue === 'clear') {
+                this._main.textContent = 'CLEAR';
+                this.onclick = () => {
+                    applicationState.articles.forEach(x => x.set(0));
+                }
+            } else if (newValue === 'print') {
+                this._main.textContent = 'PRINT';
+                this.onclick = async () => {
+                    for (const s of applicationState.articles) {
+                        const article = applicationConfig.articles.find(x => x.key == s[0]);
+                        if (article) {
+                            for (let n = s[1].get(); n > 0; n--) {
+                                await printOnPrinter(article);
+                            }
+                        }
+                        s[1].set(0);
+                    }
+                }
+                applicationState.articles.forEach(x => x.set(0));
+            }
+        }
+    }
 }
+
 customElements.define(ActionButton.is, ActionButton)

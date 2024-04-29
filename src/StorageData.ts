@@ -16,7 +16,9 @@ export interface IPrintConfig {
 }
 
 export interface IConfig {
-    currency : string
+    currency: string,
+    codepage: string,
+    header: string
 }
 
 export interface IStorageData {

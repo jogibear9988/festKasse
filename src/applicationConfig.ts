@@ -7,7 +7,9 @@ export let applicationConfig: IStorageData = {
     screens: [],
     printConfig: {},
     config: {
-        currency: '€'
+        currency: '€',
+        codepage: 'cp858',
+        header: '                  1. Mai Fest'
     }
 };
 

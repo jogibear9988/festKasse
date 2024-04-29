@@ -3,6 +3,7 @@ import { Signal } from "signal-polyfill";
 import { applicationConfig } from '../applicationConfig.js';
 import { IArticle } from '../StorageData.js';
 import { applicationState } from '../applicationState.js';
+import { effect } from '../effect.js';
 
 export class BookButton extends BaseCustomWebComponentConstructorAppend {
 
@@ -60,8 +61,6 @@ export class BookButton extends BaseCustomWebComponentConstructorAppend {
     private _article: IArticle;
     private _badge: HTMLDivElement;
 
-    private count = 0;
-
     constructor() {
         super();
         super._restoreCachedInititalValues();
@@ -69,25 +68,6 @@ export class BookButton extends BaseCustomWebComponentConstructorAppend {
         this._main = this._getDomElement<HTMLDivElement>('main');
         this._price = this._getDomElement<HTMLDivElement>('price');
         this._badge = this._getDomElement<HTMLDivElement>('badge');
-
-        this.onclick = () => {
-            if (applicationState.storno.get()) {
-                this.count -= 1;
-                applicationState.storno.set(false);
-            } else {
-                this.count += 1;
-            }
-            if (this.count < 0)
-                this.count = 0;
-            
-            if (this.count > 0) {
-                this._badge.textContent = '' + this.count;
-                this._badge.style.display = '';
-            } else {
-                this._badge.textContent = '';
-                this._badge.style.display = 'none';
-            }
-        }
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -95,6 +75,35 @@ export class BookButton extends BaseCustomWebComponentConstructorAppend {
             this._article = applicationConfig.articles.find(x => x.key === newValue);
             this._main.innerHTML = this._article.name;
             this._price.innerHTML = (this._article.price / 100).toFixed(2) + ' ' + applicationConfig.config.currency;
+
+            const state = applicationState.articles.get(this._article?.key);
+            this.onclick = () => {
+                if (state) {
+                    let value = state.get();
+                    if (applicationState.storno.get()) {
+                        value -= 1;
+                        applicationState.storno.set(false);
+                    } else {
+                        value += 1;
+                    }
+                    if (value < 0)
+                        value = 0;
+
+                    state.set(value);
+                }
+            }
+            if (state) {
+                effect(() => {
+                    const value = state.get();
+                    if (value > 0) {
+                        this._badge.textContent = '' + value;
+                        this._badge.style.display = '';
+                    } else {
+                        this._badge.textContent = '';
+                        this._badge.style.display = 'none';
+                    }
+                });
+            }
         }
     }
 

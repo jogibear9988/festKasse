@@ -11,7 +11,6 @@ export async function printOnPrinter(article: IArticle) {
         if (!receiptPrinter) {
             receiptPrinter = new WebBluetoothReceiptPrinter();
             receiptPrinter.addEventListener('connected', device => {
-                alert(`Connected to ${device.name} (#${device.id})`)
                 console.log(`Connected to ${device.name} (#${device.id})`);
                 printerLanguage = device.language;
                 printerCodepageMapping = device.codepageMapping ;

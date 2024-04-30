@@ -6,7 +6,8 @@ export let applicationConfig = {
     config: {
         currency: '€',
         codepage: 'cp858',
-        header: '                  1. Mai Fest'
+        header: '                  1. Mai Fest',
+        depositText: 'Pfand'
     }
 };
 let data = localStorage.getItem(configName);

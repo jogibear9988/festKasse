@@ -30,3 +30,8 @@ export interface IStorageData {
     printConfig: IPrintConfig,
     config: IConfig,
 }
+
+export interface IArticleSoldData {
+    key: string,
+    count: number
+}

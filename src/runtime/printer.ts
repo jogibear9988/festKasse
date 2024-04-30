@@ -2,6 +2,7 @@ import ThermalPrinterEncoder from '../../libs/ThermalPrinterEncoder/thermal-prin
 import WebBluetoothReceiptPrinter from '../../libs/WebBluetoothReceiptPrinter/WebBluetoothReceiptPrinter.js';
 import { IArticle } from '../StorageData.js';
 import { applicationConfig } from '../applicationConfig.js';
+import { getSoldConfig, saveSoldConfig } from '../applicationStateStorage.js';
 
 let printerLanguage;
 let printerCodepageMapping;
@@ -13,7 +14,7 @@ export async function printOnPrinter(article: IArticle) {
             receiptPrinter.addEventListener('connected', device => {
                 console.log(`Connected to ${device.name} (#${device.id})`);
                 printerLanguage = device.language;
-                printerCodepageMapping = device.codepageMapping ;
+                printerCodepageMapping = device.codepageMapping;
             });
             await receiptPrinter.connect();
         }
@@ -21,6 +22,16 @@ export async function printOnPrinter(article: IArticle) {
             language: printerLanguage ?? 'esc-pos',
             codepageMapping: printerCodepageMapping ?? 'zjiang'
         });
+
+        let solds = getSoldConfig();
+        let sold = solds.find(x => x.key === article.key);
+        if (!sold) {
+            sold = { key: article.key, count: 0 };
+            solds.push(sold);
+        }
+        sold.count += 1;
+        saveSoldConfig(solds);
+
         let data = encoder
             //@ts-ignore
             .initialize()

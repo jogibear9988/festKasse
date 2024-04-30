@@ -1,4 +1,4 @@
-import { IArticle, IPrintConfig, IScreen, IStorageData } from "./StorageData.js"
+import { IStorageData } from "./StorageData.js"
 
 const configName = "festKasse";
 

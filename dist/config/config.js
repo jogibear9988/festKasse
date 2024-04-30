@@ -7,6 +7,7 @@ import './styleEditor.js';
 import './article-table.js';
 import { ArticleTable } from "./article-table.js";
 import { applicationConfig, saveConfig } from "../applicationConfig.js";
+import { SoldTable } from "./sold-table.js";
 const serviceContainer = createDefaultServiceContainer();
 serviceContainer.register('elementsService', new PreDefinedElementsService('demo', {
     elements: [
@@ -147,10 +148,18 @@ function articleTable() {
     at.setAttribute('dock-spawn-hide-close-button', '');
     dock.appendChild(at);
 }
+function soldTable() {
+    const at = new SoldTable();
+    at.title = "sold";
+    at.setAttribute('dock-spawn-panel-type', 'document');
+    at.setAttribute('dock-spawn-hide-close-button', '');
+    dock.appendChild(at);
+}
 requestAnimationFrame(() => {
     if (applicationConfig.screens.length > 0)
         newDocument(applicationConfig.screens[0].html, applicationConfig.screens[0].style);
     else
         newDocument('', style);
     articleTable();
+    soldTable();
 });

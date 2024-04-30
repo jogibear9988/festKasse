@@ -3,6 +3,8 @@ export interface IArticle {
     name: string,
     print: string,
     price: number,
+    deposit: number,
+
 }
 
 export interface IScreen {
@@ -18,7 +20,8 @@ export interface IPrintConfig {
 export interface IConfig {
     currency: string,
     codepage: string,
-    header: string
+    header: string,
+    depositText: string,
 }
 
 export interface IStorageData {

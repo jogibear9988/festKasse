@@ -15,7 +15,8 @@ const serviceContainer = createDefaultServiceContainer();
 serviceContainer.register('elementsService', new PreDefinedElementsService('demo', {
     elements: [
         "book-button",
-        "action-button"
+        "action-button",
+        "display-price"
     ]
 }));
 

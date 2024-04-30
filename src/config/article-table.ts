@@ -71,6 +71,9 @@ export class ArticleTable extends BaseCustomWebComponentConstructorAppend {
                     colId: 'price',
                     field: 'price'
                 }, {
+                    colId: 'deposit',
+                    field: 'deposit'
+                }, {
                     colId: 'print',
                     field: 'print'
                 }
@@ -107,6 +110,7 @@ export class ArticleTable extends BaseCustomWebComponentConstructorAppend {
                 name: node.data.name,
                 print: node.data.print,
                 price: parseInt(node.data.price?.toString()),
+                deposit: parseInt(node.data.deposit?.toString()),
             }
             rowData.push(article);
         });

@@ -46,6 +46,7 @@ export async function printOnPrinter(article: IArticle) {
             .newline()
             .newline()
             .cut()
+            .pulse(0)
             .encode();
         await receiptPrinter.print(data);
     } catch (err) {

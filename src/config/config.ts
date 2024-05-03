@@ -17,7 +17,8 @@ serviceContainer.register('elementsService', new PreDefinedElementsService('demo
     elements: [
         "book-button",
         "action-button",
-        "display-price"
+        "display-price",
+        "console-output"
     ]
 }));
 

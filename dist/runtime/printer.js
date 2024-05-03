@@ -42,6 +42,7 @@ export async function printOnPrinter(article) {
             .newline()
             .newline()
             .cut()
+            .pulse(0)
             .encode();
         await receiptPrinter.print(data);
     }

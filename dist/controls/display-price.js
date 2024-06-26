@@ -21,15 +21,7 @@ export class DisplayPrice extends BaseCustomWebComponentConstructorAppend {
         super._restoreCachedInititalValues();
         this._main = this._getDomElement('main');
         effect(() => {
-            let summe = 0;
-            for (let s of applicationState.articles) {
-                const v = s[1].get();
-                if (v > 0) {
-                    const article = applicationConfig.articles.find(x => x.key == s[0]);
-                    summe += v * ((article.price ?? 0) + (article.deposit ?? 0));
-                }
-                this._main.innerText = (summe / 100).toFixed(2) + ' ' + applicationConfig.config.currency;
-            }
+            this._main.innerText = applicationState.price.get().toFixed(2) + ' ' + applicationConfig.config.currency;
         });
     }
     ready() {

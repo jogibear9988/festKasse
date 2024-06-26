@@ -14,7 +14,9 @@ serviceContainer.register('elementsService', new PreDefinedElementsService('demo
         "book-button",
         "action-button",
         "display-price",
-        "console-output"
+        "console-output",
+        "pay-control",
+        "display-remaining"
     ]
 }));
 const style = `
@@ -57,6 +59,58 @@ action-button {
 
 action-button[active] {
     background: red;
+}
+
+display-price {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 900;
+    font-size: 40px;
+    border: 1px solid white;
+    border-style: double;
+    border-width: thick;
+}
+
+pay-control::part(sum) {
+    border: 1px solid white;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+}
+
+pay-control::part(number) {
+    border: 1px solid white;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+}
+
+pay-control::part(number):hover {
+    background-color: lightgray;
+}
+
+pay-control::part(number):active {
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+display-remaining {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: yellow;
+    font-weight: 900;
+    font-size: 40px;
+    border: 1px solid white;
+    border-style: double;
+    border-width: thick;
 }`;
 //clear cache??
 //const cache = await caches.open(cacheName);

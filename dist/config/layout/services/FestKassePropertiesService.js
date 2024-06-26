@@ -14,7 +14,7 @@ export class FestKassePropertiesService extends AbstractPropertiesService {
             return true;
         return false;
     }
-    getProperties(designItem) {
+    async getProperties(designItem) {
         if (designItem.name === BookButton.is)
             return [{
                     name: 'article',

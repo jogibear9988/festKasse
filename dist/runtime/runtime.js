@@ -12,6 +12,18 @@ const container = document.getElementById('container');
 const shadowRoot = container.attachShadow({ mode: 'open' });
 for (const art of applicationConfig.articles)
     applicationState.articles.set(art.key, new Signal.State(0));
+applicationState.price = new Signal.Computed(() => {
+    let summe = 0;
+    for (let s of applicationState.articles) {
+        const v = s[1].get();
+        if (v > 0) {
+            const article = applicationConfig.articles.find(x => x.key == s[0]);
+            summe += v * ((article.price ?? 0) + (article.deposit ?? 0));
+        }
+    }
+    return (summe / 100);
+});
+applicationState.remaining = new Signal.Computed(() => applicationState.payed.get() - applicationState.price.get());
 const screen = applicationConfig.screens[0];
 if (screen) {
     shadowRoot.adoptedStyleSheets = [cssFromString(screen?.style ?? '')];

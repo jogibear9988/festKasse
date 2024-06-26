@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * Version: 0.48.0(0037b13fb5d186fdf1e7df51a9416a2de2b8c670)
+ * Version: 0.50.0(c321d0fbecb50ab8a5365fa1965476b0ae63fc87)
  * Released under the MIT license
  * https://github.com/microsoft/monaco-editor/blob/main/LICENSE.txt
  *-----------------------------------------------------------------------------*/
@@ -270,9 +270,19 @@ var language = {
     // Recognize strings, including those broken across lines with \ (but not without)
     strings: [
       [/'$/, "string.escape", "@popall"],
+      [/f'{1,3}/, "string.escape", "@fStringBody"],
       [/'/, "string.escape", "@stringBody"],
       [/"$/, "string.escape", "@popall"],
+      [/f"{1,3}/, "string.escape", "@fDblStringBody"],
       [/"/, "string.escape", "@dblStringBody"]
+    ],
+    fStringBody: [
+      [/[^\\'\{\}]+$/, "string", "@popall"],
+      [/[^\\'\{\}]+/, "string"],
+      [/\{[^\}':!=]+/, "identifier", "@fStringDetail"],
+      [/\\./, "string"],
+      [/'/, "string.escape", "@popall"],
+      [/\\$/, "string"]
     ],
     stringBody: [
       [/[^\\']+$/, "string", "@popall"],
@@ -281,12 +291,27 @@ var language = {
       [/'/, "string.escape", "@popall"],
       [/\\$/, "string"]
     ],
+    fDblStringBody: [
+      [/[^\\"\{\}]+$/, "string", "@popall"],
+      [/[^\\"\{\}]+/, "string"],
+      [/\{[^\}':!=]+/, "identifier", "@fStringDetail"],
+      [/\\./, "string"],
+      [/"/, "string.escape", "@popall"],
+      [/\\$/, "string"]
+    ],
     dblStringBody: [
       [/[^\\"]+$/, "string", "@popall"],
       [/[^\\"]+/, "string"],
       [/\\./, "string"],
       [/"/, "string.escape", "@popall"],
       [/\\$/, "string"]
+    ],
+    fStringDetail: [
+      [/[:][^}]+/, "string"],
+      [/[!][ars]/, "string"],
+      // only !a, !r, !s are supported by f-strings: https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals
+      [/=/, "string"],
+      [/\}/, "identifier", "@pop"]
     ]
   }
 };

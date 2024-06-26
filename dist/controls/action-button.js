@@ -2,7 +2,7 @@ import { BaseCustomWebComponentConstructorAppend, html, css } from '@node-projec
 import { applicationState } from '../applicationState.js';
 import { effect } from '../effect.js';
 import { applicationConfig } from '../applicationConfig.js';
-import { printOnPrinter } from '../runtime/printer.js';
+import { openRegister, printOnPrinter } from '../runtime/printer.js';
 export class ActionButton extends BaseCustomWebComponentConstructorAppend {
     static template = html `
         <div>
@@ -54,6 +54,13 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
                 this._main.textContent = 'CLEAR';
                 this.onclick = () => {
                     applicationState.articles.forEach(x => x.set(0));
+                    applicationState.payedString.set('0');
+                };
+            }
+            else if (newValue === 'open') {
+                this._main.textContent = 'OPEN';
+                this.onclick = async () => {
+                    await openRegister();
                 };
             }
             else if (newValue === 'print') {
@@ -70,6 +77,7 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
                     }
                 };
                 applicationState.articles.forEach(x => x.set(0));
+                applicationState.payedString.set('0');
             }
         }
     }

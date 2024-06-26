@@ -5,7 +5,7 @@ import { IArticle } from '../StorageData.js';
 import { applicationState } from '../applicationState.js';
 import { effect } from '../effect.js';
 
-export class DisplayPrice extends BaseCustomWebComponentConstructorAppend {
+export class DisplayRemaining extends BaseCustomWebComponentConstructorAppend {
 
     static readonly template = html`
         <div>
@@ -19,7 +19,7 @@ export class DisplayPrice extends BaseCustomWebComponentConstructorAppend {
         }
         `;
 
-    static readonly is = 'display-price';
+    static readonly is = 'display-remaining';
 
     private _main: HTMLDivElement;
     private _article: IArticle;
@@ -31,7 +31,7 @@ export class DisplayPrice extends BaseCustomWebComponentConstructorAppend {
         this._main = this._getDomElement<HTMLDivElement>('main');
 
         effect(() => {
-            this._main.innerText = applicationState.price.get().toFixed(2) + ' ' + applicationConfig.config.currency;
+            this._main.innerText = applicationState.remaining.get().toFixed(2) + ' ' + applicationConfig.config.currency;
         });
     }
 
@@ -40,4 +40,4 @@ export class DisplayPrice extends BaseCustomWebComponentConstructorAppend {
         this._assignEvents();
     }
 }
-customElements.define(DisplayPrice.is, DisplayPrice)
+customElements.define(DisplayRemaining.is, DisplayRemaining)

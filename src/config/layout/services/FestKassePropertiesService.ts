@@ -9,6 +9,7 @@ export class FestKassePropertiesService extends AbstractPropertiesService {
     getRefreshMode(designItem: IDesignItem): RefreshMode {
         return RefreshMode.full;
     }
+    
     isHandledElement(designItem: IDesignItem): boolean {
         if (designItem.name === BookButton.is)
             return true;
@@ -16,7 +17,8 @@ export class FestKassePropertiesService extends AbstractPropertiesService {
             return true;
         return false;
     }
-    getProperties(designItem: IDesignItem): IProperty[] | IPropertyGroup[] {
+
+    async getProperties(designItem: IDesignItem): Promise<IProperty[] | IPropertyGroup[]> {
         if (designItem.name === BookButton.is)
             return [{
                 name: 'article',

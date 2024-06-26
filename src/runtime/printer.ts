@@ -54,3 +54,32 @@ export async function printOnPrinter(article: IArticle) {
         console.error(err);
     }
 };
+
+export async function openRegister() {
+    try {
+        if (!receiptPrinter) {
+            receiptPrinter = new WebBluetoothReceiptPrinter();
+            receiptPrinter.addEventListener('connected', device => {
+                console.log(`Connected to ${device.name} (#${device.id})`);
+                printerLanguage = device.language;
+                printerCodepageMapping = device.codepageMapping;
+            });
+            await receiptPrinter.connect();
+        }
+        const encoder = new ThermalPrinterEncoder({
+            language: printerLanguage ?? 'esc-pos',
+            codepageMapping: printerCodepageMapping ?? 'zjiang'
+        });
+
+        let data = encoder
+            //@ts-ignore
+            .initialize()
+            .codepage(applicationConfig.config.codepage)
+            .pulse(0)
+            .encode();
+        await receiptPrinter.print(data);
+    } catch (err) {
+        alert(err)
+        console.error(err);
+    }
+};

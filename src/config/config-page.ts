@@ -29,7 +29,7 @@ export class ConfigPage extends BaseCustomWebComponentConstructorAppend {
             height: calc(100% - 30px);
         }`;
 
-    static readonly is = 'artcle-table';
+    static readonly is = 'config-page';
     static readonly properties = {
     }
 

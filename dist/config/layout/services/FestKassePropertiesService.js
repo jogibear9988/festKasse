@@ -27,7 +27,7 @@ export class FestKassePropertiesService extends AbstractPropertiesService {
             return [{
                     name: 'action',
                     type: 'list',
-                    values: ['storno', 'clear', 'print'],
+                    values: ['storno', 'clear', 'print', 'open'],
                     service: this,
                     propertyType: PropertyType.propertyAndAttribute
                 }];

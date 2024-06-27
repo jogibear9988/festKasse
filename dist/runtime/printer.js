@@ -5,7 +5,7 @@ import { getSoldConfig, saveSoldConfig } from '../applicationStateStorage.js';
 let printerLanguage;
 let printerCodepageMapping;
 let receiptPrinter;
-export async function printOnPrinter(article) {
+export async function printOnPrinter(articles) {
     try {
         if (!receiptPrinter) {
             receiptPrinter = new WebBluetoothReceiptPrinter();
@@ -20,31 +20,31 @@ export async function printOnPrinter(article) {
             language: printerLanguage ?? 'esc-pos',
             codepageMapping: printerCodepageMapping ?? 'zjiang'
         });
-        let solds = getSoldConfig();
-        let sold = solds.find(x => x.key === article.key);
-        if (!sold) {
-            sold = { key: article.key, count: 0 };
-            solds.push(sold);
-        }
-        sold.count += 1;
-        saveSoldConfig(solds);
         let data = encoder
             //@ts-ignore
             .initialize()
-            .codepage(applicationConfig.config.codepage)
-            .newline()
-            .text(article.name.padEnd(42, ' ') + (article.price / 100).toFixed(2) + ' ' + applicationConfig.config.currency)
-            .newline()
-            .newline()
-            .newline()
-            .newline()
-            .text(applicationConfig.config.header)
-            .newline()
-            .newline()
-            .cut()
-            .pulse(0)
-            .encode();
-        await receiptPrinter.print(data);
+            .codepage(applicationConfig.config.codepage);
+        for (let article of articles) {
+            let solds = getSoldConfig();
+            let sold = solds.find(x => x.key === article.key);
+            if (!sold) {
+                sold = { key: article.key, count: 0 };
+                solds.push(sold);
+            }
+            sold.count += 1;
+            saveSoldConfig(solds);
+            data = data.newline()
+                .text(article.name.padEnd(42, ' ') + (article.price / 100).toFixed(2) + ' ' + applicationConfig.config.currency)
+                .newline()
+                .newline()
+                .newline()
+                .newline()
+                .text(applicationConfig.config.header)
+                .newline()
+                .newline()
+                .cut();
+        }
+        await receiptPrinter.print(data.encode());
     }
     catch (err) {
         alert(err);

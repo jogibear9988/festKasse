@@ -59,7 +59,7 @@ export class PayControl extends BaseCustomWebComponentConstructorAppend {
             });
         }
         effect(() => {
-            sum.innerHTML = applicationState.payed.get().toFixed(2) + applicationConfig.config.currency;
+            sum.innerHTML = applicationState.payed.get().toFixed(2) + ' ' + applicationConfig.config.currency;
         });
     }
     ready() {

@@ -66,15 +66,17 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
             else if (newValue === 'print') {
                 this._main.textContent = 'PRINT';
                 this.onclick = async () => {
+                    let printList = [];
                     for (const s of applicationState.articles) {
                         const article = applicationConfig.articles.find(x => x.key == s[0]);
                         if (article) {
                             for (let n = s[1].get(); n > 0; n--) {
-                                await printOnPrinter(article);
+                                printList.push(article);
                             }
                         }
                         s[1].set(0);
                     }
+                    await printOnPrinter(printList);
                 };
                 applicationState.articles.forEach(x => x.set(0));
                 applicationState.payedString.set('0');

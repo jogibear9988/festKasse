@@ -9,7 +9,7 @@ export class FestKassePropertiesService extends AbstractPropertiesService {
     getRefreshMode(designItem: IDesignItem): RefreshMode {
         return RefreshMode.full;
     }
-    
+
     isHandledElement(designItem: IDesignItem): boolean {
         if (designItem.name === BookButton.is)
             return true;
@@ -31,7 +31,7 @@ export class FestKassePropertiesService extends AbstractPropertiesService {
             return [{
                 name: 'action',
                 type: 'list',
-                values: ['storno', 'clear', 'print'],
+                values: ['storno', 'clear', 'print', 'open'],
                 service: this,
                 propertyType: PropertyType.propertyAndAttribute
             }];

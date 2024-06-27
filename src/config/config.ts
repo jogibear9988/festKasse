@@ -8,9 +8,11 @@ import 'dock-spawn-ts/lib/js/webcomponent/DockSpawnTsWebcomponent.js';
 import '@node-projects/web-component-designer';
 import './styleEditor.js';
 import './article-table.js';
+import './config-page.js';
 import { ArticleTable } from "./article-table.js";
 import { applicationConfig, saveConfig } from "../applicationConfig.js";
 import { SoldTable } from "./sold-table.js";
+import { ConfigPage } from "./config-page.js";
 
 const serviceContainer = createDefaultServiceContainer();
 serviceContainer.register('elementsService', new PreDefinedElementsService('demo', {
@@ -226,6 +228,14 @@ function soldTable() {
     dock.appendChild(at);
 }
 
+function configPage() {
+    const at = new ConfigPage();
+    at.title = "config";
+    at.setAttribute('dock-spawn-panel-type', 'document');
+    at.setAttribute('dock-spawn-hide-close-button', '');
+    dock.appendChild(at);
+}
+
 requestAnimationFrame(() => {
     if (applicationConfig.screens.length > 0)
         newDocument(applicationConfig.screens[0].html, applicationConfig.screens[0].style);
@@ -233,4 +243,5 @@ requestAnimationFrame(() => {
         newDocument('', style);
     articleTable();
     soldTable();
+    configPage();
 })

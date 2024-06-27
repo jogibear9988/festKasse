@@ -25,7 +25,7 @@ export class ConfigPage extends BaseCustomWebComponentConstructorAppend {
             width: 100%;
             height: calc(100% - 30px);
         }`;
-    static is = 'artcle-table';
+    static is = 'config-page';
     static properties = {};
     _save;
     _header;

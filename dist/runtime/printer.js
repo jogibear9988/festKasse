@@ -21,6 +21,9 @@ export async function printOnPrinter(articles) {
                 printerLanguage = device.language;
                 printerCodepageMapping = device.codepageMapping;
             });
+            receiptPrinter.addEventListener('disconnected', device => {
+                console.log(`Disconnected to ${device.name} (#${device.id})`);
+            });
             await receiptPrinter.connect();
         }
         const encoder = new ThermalPrinterEncoder({

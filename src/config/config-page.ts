@@ -5,7 +5,13 @@ export class ConfigPage extends BaseCustomWebComponentConstructorAppend {
 
     static readonly template = html`
         <div id="root">
+            Header:
             <input id="header">
+            Printer:
+            <select id="printer">
+                <option value="usb">usb</option>
+                <option value="bluetooth">bluetooth</option>
+            </select>
         </div>
         <div id="buttons">
             <button id="save">save</button>
@@ -18,6 +24,9 @@ export class ConfigPage extends BaseCustomWebComponentConstructorAppend {
         }
         #root {
             display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 20px;
         }
         #buttons {
             display: flex;
@@ -35,13 +44,16 @@ export class ConfigPage extends BaseCustomWebComponentConstructorAppend {
 
     private _save: HTMLButtonElement;
     private _header: HTMLInputElement;
+    private _printer: HTMLSelectElement;
 
     constructor() {
         super();
         super._restoreCachedInititalValues();
 
         this._header = this._getDomElement<HTMLInputElement>('header');
+        this._printer = this._getDomElement<HTMLSelectElement>('printer');
         this._header.value = applicationConfig.config.header;
+        this._printer.value = applicationConfig.config.printer;
 
         this._save = this._getDomElement<HTMLButtonElement>('save');
         this._save.onclick = () => this.save();
@@ -54,6 +66,7 @@ export class ConfigPage extends BaseCustomWebComponentConstructorAppend {
 
     save() {
         applicationConfig.config.header = this._header.value;
+        applicationConfig.config.printer = <any>this._printer.value;
         saveConfig();
     }
 }

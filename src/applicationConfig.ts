@@ -10,7 +10,8 @@ export let applicationConfig: IStorageData = {
         currency: '€',
         codepage: 'cp858',
         header: '                  Mein Fest',
-        depositText: 'Pfand'
+        depositText: 'Pfand',
+        printer: 'usb'
     }
 };
 

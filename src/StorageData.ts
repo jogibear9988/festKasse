@@ -22,6 +22,7 @@ export interface IConfig {
     codepage: string,
     header: string,
     depositText: string,
+    printer: 'usb' | 'bluetooth'
 }
 
 export interface IStorageData {

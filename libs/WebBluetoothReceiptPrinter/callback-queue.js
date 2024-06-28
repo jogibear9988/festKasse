@@ -16,7 +16,11 @@ class CallbackQueue {
             that._working = true;
 
             let callback = that._queue.shift();
-            await callback();
+            try {
+                await callback();
+            } catch (err) {
+                console.error(err);
+            }
 
             run();
         }

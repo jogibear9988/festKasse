@@ -1,19 +1,20 @@
 import EventEmitter from "./event-emitter.js";
 import CallbackQueue from "./callback-queue.js";
+import { sleep } from "@node-projects/web-component-designer/dist/elements/helper/Helper.js";
 
 const DeviceProfiles = [
 
 	/* Zjiang ZJ-5805 */
 	{
 		filters: [
-			{ services: [ '000018f0-0000-1000-8000-00805f9b34fb' ] }
+			{ services: ['000018f0-0000-1000-8000-00805f9b34fb'] }
 		],
-		
-		service:			'000018f0-0000-1000-8000-00805f9b34fb',
-		characteristic:		'00002af1-0000-1000-8000-00805f9b34fb',
 
-		language:			'esc-pos',
-		codepageMapping:	'zjiang'
+		service: '000018f0-0000-1000-8000-00805f9b34fb',
+		characteristic: '00002af1-0000-1000-8000-00805f9b34fb',
+
+		language: 'esc-pos',
+		codepageMapping: 'zjiang'
 	}
 ]
 
@@ -21,13 +22,13 @@ const DeviceProfiles = [
 class WebBluetoothReceiptPrinter {
 
 	constructor() {
-        this._internal = {
-            emitter:    		new EventEmitter(),
-			queue:				new CallbackQueue(),
-            device:     		null,
-			characteristic:		null,
-			profile:			null
-        }
+		this._internal = {
+			emitter: new EventEmitter(),
+			queue: new CallbackQueue(),
+			device: null,
+			characteristic: null,
+			profile: null
+		}
 
 		navigator.bluetooth.addEventListener('disconnect', event => {
 			if (this._internal.device == event.device) {
@@ -38,30 +39,16 @@ class WebBluetoothReceiptPrinter {
 
 	async connect() {
 		try {
-			let device = await navigator.bluetooth.requestDevice({ 
+			let device = await navigator.bluetooth.requestDevice({
 				filters: DeviceProfiles.map(i => i.filters).reduce((a, b) => a.concat(b))
 			});
-			
+
 			if (device) {
 				await this.open(device);
 			}
 		}
-		catch(error) {
+		catch (error) {
 			console.log('Could not connect! ' + error);
-		}
-	}
-
-	async reconnect(previousDevice) {
-		if (!navigator.bluetooth.getDevices) {
-			return;
-		}
-
-		let devices = await navigator.bluetooth.getDevices();
-
-		let device = devices.find(device => device.id == previousDevice.id);
-
-		if (device) {
-			await this.open(device);
 		}
 	}
 
@@ -77,46 +64,14 @@ class WebBluetoothReceiptPrinter {
 
 		let service = await server.getPrimaryService(this._internal.profile.service);
 		let characteristic = await service.getCharacteristic(this._internal.profile.characteristic);
-
-		/*
-		let characteristicSt = await service.getCharacteristic('00002af0-0000-1000-8000-00805f9b34fb');
-		setInterval(() => {
-			if (characteristic.value) {
-				let a = new Uint8Array(characteristic.value.buffer)
-				console.log("ch", a);
-			}
-			characteristic.readValue();
-		}, 100);
-
-		setInterval(() => {
-			if (characteristicSt.value) {
-				let a = new Uint8Array(characteristicSt.value.buffer)
-				console.log("chSt", a);
-			}
-			characteristicSt.readValue();
-		}, 100);*/
-		
 		this._internal.characteristic = characteristic;
-		/*characteristic.startNotifications();
-		characteristicSt.startNotifications();
-		characteristic.addEventListener('characteristicvaluechanged',(e)=> {
-			let b=characteristic;
-			let a=e;
-			debugger;
-		});
-		characteristicSt.addEventListener('characteristicvaluechanged',(e)=> {
-			let b=characteristicSt;
-			let a=e;
-			debugger;
-		});*/
-		
-		
+
 		this._internal.emitter.emit('connected', {
-			type:				'bluetooth',
-			name: 				this._internal.device.name,
-			id: 				this._internal.device.id,
-			language: 			this._internal.profile.language,
-			codepageMapping:	this._internal.profile.codepageMapping
+			type: 'bluetooth',
+			name: this._internal.device.name,
+			id: this._internal.device.id,
+			language: this._internal.profile.language,
+			codepageMapping: this._internal.profile.codepageMapping
 		});
 	}
 
@@ -133,28 +88,33 @@ class WebBluetoothReceiptPrinter {
 
 		this._internal.emitter.emit('disconnected');
 	}
-	
+
 	print(command) {
 		return new Promise(resolve => {
 			const maxLength = 100;
 			let chunks = Math.ceil(command.length / maxLength);
-	
+
 			if (chunks === 1) {
 				let data = command;
 
-				this._internal.queue.add(() => this._internal.characteristic.writeValueWithoutResponse(data));
+				this._internal.queue.add(() => this.tryWriteWithReopen(data));
 			} else {
 				for (let i = 0; i < chunks; i++) {
 					let byteOffset = i * maxLength;
 					let length = Math.min(command.length, byteOffset + maxLength);
 					let data = command.slice(byteOffset, length);
 
-					this._internal.queue.add(() => this._internal.characteristic.writeValueWithoutResponse(data));
+					this._internal.queue.add(() => this.tryWriteWithReopen(data));
 				}
 			}
-	
+
 			this._internal.queue.add(() => resolve());
 		});
+	}
+
+	async tryWriteWithReopen(data) {
+		await this.open(this._internal.device);
+		await this._internal.characteristic.writeValueWithoutResponse(data);
 	}
 
 	addEventListener(n, f) {

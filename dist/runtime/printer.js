@@ -1,14 +1,21 @@
 import ThermalPrinterEncoder from '../../libs/ThermalPrinterEncoder/thermal-printer-encoder.esm.js';
 import WebBluetoothReceiptPrinter from '../../libs/WebBluetoothReceiptPrinter/WebBluetoothReceiptPrinter.js';
+import WebUsbReceiptPrinter from '../../libs/WebUsbReceiptPrinter/WebUsbReceiptPrinter.js';
 import { applicationConfig } from '../applicationConfig.js';
 import { getSoldConfig, saveSoldConfig } from '../applicationStateStorage.js';
 let printerLanguage;
 let printerCodepageMapping;
 let receiptPrinter;
+export function getPrinter() {
+    if (applicationConfig.config.printer == 'usb')
+        return new WebUsbReceiptPrinter;
+    else
+        return new WebBluetoothReceiptPrinter;
+}
 export async function printOnPrinter(articles) {
     try {
         if (!receiptPrinter) {
-            receiptPrinter = new WebBluetoothReceiptPrinter();
+            receiptPrinter = getPrinter();
             receiptPrinter.addEventListener('connected', device => {
                 console.log(`Connected to ${device.name} (#${device.id})`);
                 printerLanguage = device.language;
@@ -55,7 +62,7 @@ export async function printOnPrinter(articles) {
 export async function openRegister() {
     try {
         if (!receiptPrinter) {
-            receiptPrinter = new WebBluetoothReceiptPrinter();
+            receiptPrinter = getPrinter();
             receiptPrinter.addEventListener('connected', device => {
                 console.log(`Connected to ${device.name} (#${device.id})`);
                 printerLanguage = device.language;

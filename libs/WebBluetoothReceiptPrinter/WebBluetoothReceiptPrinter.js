@@ -78,7 +78,38 @@ class WebBluetoothReceiptPrinter {
 		let service = await server.getPrimaryService(this._internal.profile.service);
 		let characteristic = await service.getCharacteristic(this._internal.profile.characteristic);
 
+		/*
+		let characteristicSt = await service.getCharacteristic('00002af0-0000-1000-8000-00805f9b34fb');
+		setInterval(() => {
+			if (characteristic.value) {
+				let a = new Uint8Array(characteristic.value.buffer)
+				console.log("ch", a);
+			}
+			characteristic.readValue();
+		}, 100);
+
+		setInterval(() => {
+			if (characteristicSt.value) {
+				let a = new Uint8Array(characteristicSt.value.buffer)
+				console.log("chSt", a);
+			}
+			characteristicSt.readValue();
+		}, 100);*/
+		
 		this._internal.characteristic = characteristic;
+		/*characteristic.startNotifications();
+		characteristicSt.startNotifications();
+		characteristic.addEventListener('characteristicvaluechanged',(e)=> {
+			let b=characteristic;
+			let a=e;
+			debugger;
+		});
+		characteristicSt.addEventListener('characteristicvaluechanged',(e)=> {
+			let b=characteristicSt;
+			let a=e;
+			debugger;
+		});*/
+		
 		
 		this._internal.emitter.emit('connected', {
 			type:				'bluetooth',
@@ -111,14 +142,14 @@ class WebBluetoothReceiptPrinter {
 			if (chunks === 1) {
 				let data = command;
 
-				this._internal.queue.add(() => this._internal.characteristic.writeValue(data));
+				this._internal.queue.add(() => this._internal.characteristic.writeValueWithoutResponse(data));
 			} else {
 				for (let i = 0; i < chunks; i++) {
 					let byteOffset = i * maxLength;
 					let length = Math.min(command.length, byteOffset + maxLength);
 					let data = command.slice(byteOffset, length);
 
-					this._internal.queue.add(() => this._internal.characteristic.writeValue(data));
+					this._internal.queue.add(() => this._internal.characteristic.writeValueWithoutResponse(data));
 				}
 			}
 	

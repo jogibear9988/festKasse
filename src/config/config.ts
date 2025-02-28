@@ -1,4 +1,4 @@
-import { DocumentContainer, PaletteView, PreDefinedElementsService, PropertyGrid } from "@node-projects/web-component-designer";
+import { DocumentContainer, ExtensionType, PaletteView, PointerToolButtonProvider, PreDefinedElementsService, PropertyGrid, SelectorToolButtonProvider, SeperatorToolProvider, TransformToolButtonProvider, ZoomToolButtonProvider } from "@node-projects/web-component-designer";
 import createDefaultServiceContainer from "./setupDesigner.js";
 import { DockSpawnTsWebcomponent } from 'dock-spawn-ts/lib/js/webcomponent/DockSpawnTsWebcomponent.js';
 import { StyleEditor } from "./styleEditor.js";
@@ -10,11 +10,12 @@ import './styleEditor.js';
 import './article-table.js';
 import './config-page.js';
 import { ArticleTable } from "./article-table.js";
-import { applicationConfig, saveConfig } from "../applicationConfig.js";
+import { applicationConfig, getConfig, saveConfig, setConfig } from "../applicationConfig.js";
 import { SoldTable } from "./sold-table.js";
 import { ConfigPage } from "./config-page.js";
 
 const serviceContainer = createDefaultServiceContainer();
+serviceContainer.designerExtensions.set(ExtensionType.Doubleclick, []);
 serviceContainer.register('elementsService', new PreDefinedElementsService('demo', {
     elements: [
         "book-button",
@@ -25,6 +26,20 @@ serviceContainer.register('elementsService', new PreDefinedElementsService('demo
         "display-remaining"
     ]
 }));
+
+serviceContainer.designViewToolbarButtons.length = 0;
+serviceContainer.designViewToolbarButtons.push(
+    new PointerToolButtonProvider(),
+    new SeperatorToolProvider(22),
+    new SelectorToolButtonProvider(),
+    new SeperatorToolProvider(22),
+    new ZoomToolButtonProvider(),
+    new SeperatorToolProvider(22),
+    new TransformToolButtonProvider()
+);
+serviceContainer.instanceServiceContainerCreatedCallbacks.push(instanceServiceContainer => {
+    instanceServiceContainer.designContext.extensionOptions.gridExtensionShowOverlay = true;
+})
 
 const style = `
 :host {
@@ -210,6 +225,125 @@ function newDocument(code: string, style: string) {
         }];
         saveConfig();
     }
+    const cmdExport = document.getElementById('export') as HTMLButtonElement;
+    cmdExport.onclick = () => {
+        let data = getConfig();
+        exportData(data, 'kasse-config', 'json');
+    }
+    const cmdImport = document.getElementById('import') as HTMLButtonElement;
+    cmdImport.onclick = async () => {
+        let files = await openFileDialog('json', false, 'text')
+        if (files) {
+            let data = files[0].data;
+            setConfig(data);
+        }
+    }
+}
+
+export async function openFileDialog(extension: string, multiple = false, readMode: 'binary' | 'text' = 'binary') {
+    return new Promise<{ name: string; data: string }[]>((resolve, reject) => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.style.display = 'none';
+        input.multiple = multiple;
+        if (extension) {
+            input.accept = extension;
+        }
+        document.body.appendChild(input);
+        input.click();
+        input.onchange = async (e) => {
+            const files = await readFiles(input.files, readMode);
+            document.body.removeChild(input);
+            resolve(files);
+        };
+    });
+}
+
+export async function readFiles(files: FileList | File[], readMode: 'binary' | 'text' | 'url' = 'binary') {
+    return new Promise<{ name: string; data: string, size: number }[]>(async (resolve, reject) => {
+        const results: { name: string; data: string, size: number }[] = [];
+        const ps: Promise<void>[] = [];
+        for (const f of files) {
+            const p = new Promise<void>((res) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    let readerResult = <string>reader.result;
+                    let resultData = readerResult;
+                    if (readMode == 'url') {
+                        resultData = readerResult.split(',', 2)[1];
+                    }
+
+                    results.push({ name: f.name, data: resultData, size: resultData.length });
+                    res();
+                };
+                switch (readMode) {
+                    case 'text':
+                        reader.readAsText(f);
+                        break;
+                    case 'url':
+                        reader.readAsDataURL(f);
+                        break;
+                    default:
+                        reader.readAsBinaryString(f);
+                        break;
+                }
+            });
+            ps.push(p);
+        }
+        await Promise.all(ps);
+        resolve(results);
+    });
+}
+
+export async function exportData(data: string, fileName: string, fileType: string = null, caseSensitive: boolean = false): Promise<string> {
+    let file = fileName.replace(/[&\\#,+()$~%'":*?<>{}]/g, '').replaceAll('/', '_');
+    if (!caseSensitive) file = file.toLowerCase();
+    file += (fileType ? '.' + fileType : '');
+
+    let mimeType = 'application/octet-stream';
+
+    switch (fileType) {
+        case 'json':
+            // add UTF8 BOM to file
+            data = '\ufeff' + data;
+            mimeType = 'application/json';
+            break;
+        case 'csv':
+            // add UTF8 BOM to file
+            data = '\ufeff' + data;
+            mimeType = 'text/csv;charset=utf-8;';
+            break;
+        case 'txt':
+        case 'log':
+            // add UTF8 BOM to file
+            data = '\ufeff' + data;
+            mimeType = 'text/plain;charset=utf-8;';
+            break;
+        case 'xml':
+            // add UTF8 BOM to file
+            data = '\ufeff' + data;
+            mimeType = 'text/xml;charset=utf-8;';
+            break;
+        default:
+            const array = new Uint8Array(data.length);
+            for (let i = 0; i < data.length; i++) {
+                array[i] = data.charCodeAt(i);
+            }
+            data = <any>array;
+    }
+
+    const blob = new Blob([data], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+
+    a.href = url;
+    a.style.display = 'none';
+    a.download = file;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    return file;
 }
 
 function articleTable() {

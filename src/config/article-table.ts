@@ -9,6 +9,10 @@ import style2 from '../../node_modules/ag-grid-community/styles/ag-theme-balham.
 import { applicationConfig, saveConfig } from '../applicationConfig.js';
 import { IArticle } from '../StorageData.js';
 
+import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions,ClientSideRowModelModule } from 'ag-grid-community';
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+provideGlobalGridOptions({ theme: "legacy"});
+
 export class ArticleTable extends BaseCustomWebComponentConstructorAppend {
 
     static readonly template = html`

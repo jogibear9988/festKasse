@@ -6,6 +6,9 @@ import style1 from '../../node_modules/ag-grid-community/styles/ag-grid.css' wit
 //@ts-ignore
 import style2 from '../../node_modules/ag-grid-community/styles/ag-theme-balham.css' with { type: 'css' };
 import { applicationConfig, saveConfig } from '../applicationConfig.js';
+import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions, ClientSideRowModelModule } from 'ag-grid-community';
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+provideGlobalGridOptions({ theme: "legacy" });
 export class ArticleTable extends BaseCustomWebComponentConstructorAppend {
     static template = html `
         <div id="grid" class="ag-theme-balham" ></div>

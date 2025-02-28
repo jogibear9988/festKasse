@@ -7,6 +7,9 @@ import style1 from '../../node_modules/ag-grid-community/styles/ag-grid.css' wit
 import style2 from '../../node_modules/ag-grid-community/styles/ag-theme-balham.css' with { type: 'css' };
 import { applicationConfig } from '../applicationConfig.js';
 import { getSoldConfig, clearSoldConfig } from '../applicationStateStorage.js';
+import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions, ClientSideRowModelModule } from 'ag-grid-community';
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+provideGlobalGridOptions({ theme: "legacy" });
 export class SoldTable extends BaseCustomWebComponentConstructorAppend {
     static template = html `
         <div id="grid" class="ag-theme-balham" ></div>

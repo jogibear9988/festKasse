@@ -17,7 +17,15 @@ if (data) {
     loadedConfig.config = { ...applicationConfig.config, ...loadedConfig.config };
     applicationConfig = loadedConfig;
 }
-export function saveConfig() {
+export function getConfig() {
     const data = JSON.stringify(applicationConfig);
+    return data;
+}
+export function setConfig(cfg) {
+    applicationConfig = JSON.parse(cfg);
+    localStorage.setItem(configName, cfg);
+}
+export function saveConfig() {
+    const data = getConfig();
     localStorage.setItem(configName, data);
 }

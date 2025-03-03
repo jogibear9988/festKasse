@@ -31,7 +31,10 @@ export class DisplayPrice extends BaseCustomWebComponentConstructorAppend {
         this._main = this._getDomElement<HTMLDivElement>('main');
 
         effect(() => {
-            this._main.innerText = applicationState.price.get().toFixed(2) + ' ' + applicationConfig.config.currency;
+            if (applicationState.clearOnNextBook.get())
+                this._main.innerText = applicationState.lastPrice.get().toFixed(2) + ' ' + applicationConfig.config.currency;
+            else
+                this._main.innerText = applicationState.price.get().toFixed(2) + ' ' + applicationConfig.config.currency;
         });
     }
 

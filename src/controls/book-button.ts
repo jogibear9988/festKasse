@@ -91,6 +91,13 @@ export class BookButton extends BaseCustomWebComponentConstructorAppend {
 
                     state.set(value);
                 }
+
+                if (applicationState.clearOnNextBook.get()) {
+                    applicationState.payedString.set('0');
+                    applicationState.lastPrice.set(0);
+                    applicationState.lastRemaining.set(0);
+                    applicationState.clearOnNextBook.set(false)
+                }
             }
             if (state) {
                 effect(() => {

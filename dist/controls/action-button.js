@@ -55,6 +55,9 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
                 this.onclick = () => {
                     applicationState.articles.forEach(x => x.set(0));
                     applicationState.payedString.set('0');
+                    applicationState.lastPrice.set(0);
+                    applicationState.lastRemaining.set(0);
+                    applicationState.clearOnNextBook.set(false);
                 };
             }
             else if (newValue === 'open') {
@@ -67,6 +70,9 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
                 this._main.textContent = 'PRINT';
                 this.onclick = async () => {
                     let printList = [];
+                    applicationState.lastPrice.set(applicationState.price.get());
+                    applicationState.lastRemaining.set(applicationState.remaining.get());
+                    applicationState.clearOnNextBook.set(true);
                     for (const s of applicationState.articles) {
                         const article = applicationConfig.articles.find(x => x.key == s[0]);
                         if (article) {
@@ -77,9 +83,9 @@ export class ActionButton extends BaseCustomWebComponentConstructorAppend {
                         s[1].set(0);
                     }
                     await printOnPrinter(printList);
+                    //applicationState.articles.forEach(x => x.set(0));
+                    //applicationState.payedString.set('0');
                 };
-                applicationState.articles.forEach(x => x.set(0));
-                applicationState.payedString.set('0');
             }
         }
     }

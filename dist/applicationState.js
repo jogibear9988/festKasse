@@ -5,6 +5,9 @@ class ApplicationState {
     articles = new Map();
     payedString = new Signal.State('0');
     payed = new Signal.Computed(() => parseInt(this.payedString.get()) / 100);
+    lastPrice = new Signal.State(0);
+    lastRemaining = new Signal.State(0);
+    clearOnNextBook = new Signal.State(false);
     remaining;
     price;
 }

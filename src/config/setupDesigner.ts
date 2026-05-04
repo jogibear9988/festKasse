@@ -1,7 +1,7 @@
-import { AltToEnterContainerExtensionProvider, ApplyFirstMachingExtensionProvider, BaseCustomWebComponentPropertiesService, ButtonSeperatorProvider, ChildContextMenu, ConditionExtensionProvider, ContentService, CopyPasteContextMenu, CopyPasteService, DefaultEditorTypesService, DefaultHtmlParserService, DefaultInstanceService, DefaultModelCommandService, DefaultPlacementService, DesignItemDocumentPositionService, DisplayGridExtensionProvider, DragDropService, DrawElementTool, DrawEllipsisTool, DrawLineTool, DrawPathTool, DrawRectTool, DrawToolButtonProvider, EditTextExtensionProvider, ElementAtPointService, ElementDragTitleExtensionProvider, EventsService, ExtensionType, ExternalDragDropService, FlexBoxPlacementService, FlexboxExtensionDesignViewConfigButtons, FlexboxExtensionProvider, GrayOutDragOverContainerExtensionProvider, GrayOutExtensionProvider, GridChildResizeExtensionProvider, GridExtensionDesignViewConfigButtons, GridPlacementService, HighlightElementExtensionProvider, HtmlWriterService, IDesignerCanvas, InvisibleElementExtensionDesignViewConfigButtons, InvisibleElementExtensionProvider, ItemsBelowContextMenu, JumpToElementContextMenu, MagicWandSelectorTool, MultipleItemsSelectedContextMenu, MultipleSelectionRectExtensionProvider, NamedTools, NativeElementsPropertiesService, PanTool, PathContextMenu, PickColorTool, PlacementExtensionProvider, PointerTool, PointerToolButtonProvider, PropertyGroupsService, RectContextMenu, RectangleSelectorTool, ResizeExtensionProvider, RotateLeftAndRight, RoundPixelsDesignViewConfigButton, SVGElementsPropertiesService, SelectAllChildrenContextMenu, SelectionDefaultExtensionProvider, SelectionService, SelectorToolButtonProvider, SeperatorContextMenu, SeperatorToolProvider, ServiceContainer, SimpleDemoProviderService, SnaplinesProviderService, StylesheetServiceDesignViewConfigButtons, SvgElementExtensionProvider, TextTool, TextToolButtonProvider, ToolbarExtensionsDesignViewConfigButtons, TransformToolButtonProvider, UndoService, ZMoveContextMenu, ZoomToElementContextMenu, ZoomTool, ZoomToolButtonProvider } from "@node-projects/web-component-designer";
+import { AltToEnterContainerExtensionProvider, ApplyFirstMachingExtensionProvider, BaseCustomWebComponentPropertiesService, ButtonSeperatorProvider, ChildContextMenu, ConditionExtensionProvider, CopyPasteContextMenu, CopyPasteService, DefaultEditorTypeService, DefaultHtmlParserService, DefaultInstanceService, DefaultModelCommandService, DefaultPlacementService, DefaultPropertyEditorTypesService, DeletionService, DesignItemDocumentPositionService, DesignItemService, DisplayGridExtensionProvider, DragDropService, DrawElementTool, DrawEllipsisTool, DrawLineTool, DrawPathTool, DrawRectTool, DrawToolButtonProvider, EditTextExtensionProvider, ElementAtPointService, ElementDragTitleExtensionProvider, EventsService, ExtensionType, ExternalDragDropService, FlexBoxPlacementService, FlexboxExtensionDesignViewConfigButtons, FlexboxExtensionProvider, GrayOutDragOverContainerExtensionProvider, GrayOutExtensionProvider, GridChildResizeExtensionProvider, GridExtensionDesignViewConfigButtons, GridPlacementService, HighlightElementExtensionProvider, HtmlWriterService, IDesignerCanvas, InvisibleElementExtensionDesignViewConfigButtons, InvisibleElementExtensionProvider, ItemsBelowContextMenu, JumpToElementContextMenu, MagicWandSelectorTool, MultipleItemsSelectedContextMenu, MultipleSelectionRectExtensionProvider, NamedTools, NativeElementsPropertiesService, PanTool, PathContextMenu, PickColorTool, PlacementExtensionProvider, PointerTool, PointerToolButtonProvider, PropertyGroupsService, RectContextMenu, RectangleSelectorTool, ResizeExtensionProvider, RotateLeftAndRight, RoundPixelsDesignViewConfigButton, SVGElementsPropertiesService, SelectAllChildrenContextMenu, SelectionDefaultExtensionProvider, SelectionService, SelectorToolButtonProvider, SeperatorContextMenu, SeperatorToolProvider, ServiceContainer, SimpleDemoProviderService, SnaplinesProviderService, StylesheetServiceDesignViewConfigButtons, TextTool, TextToolButtonProvider, ToolbarExtensionsDesignViewConfigButtons, TransformToolButtonProvider, UndoService, ZMoveContextMenu, ZoomToElementContextMenu, ZoomTool, ZoomToolButtonProvider } from "@node-projects/web-component-designer";
 import { CodeViewMonaco } from "@node-projects/web-component-designer-codeview-monaco";
-import { CssToolsStylesheetService } from "@node-projects/web-component-designer-stylesheetservice-css-tools";
 import { FestKassePropertiesService } from "./layout/services/FestKassePropertiesService.js";
+import { CssParserStylesheetService } from "@node-projects/web-component-designer-stylesheetservice-css-parser";
 
 export function createDefaultServiceContainer() {
   let serviceContainer = new ServiceContainer();
@@ -17,7 +17,8 @@ export function createDefaultServiceContainer() {
   serviceContainer.register("propertyService", new FestKassePropertiesService());
   serviceContainer.register("propertyGroupsService", new PropertyGroupsService());
   serviceContainer.register("instanceService", new DefaultInstanceService());
-  serviceContainer.register("editorTypesService", new DefaultEditorTypesService());
+  serviceContainer.register("editorTypeService", new DefaultEditorTypeService());
+  serviceContainer.register("propertyEditorTypesService", new DefaultPropertyEditorTypesService());
   serviceContainer.register("htmlWriterService", new HtmlWriterService());
   serviceContainer.register("snaplinesProviderService", new SnaplinesProviderService());
   serviceContainer.register("htmlParserService", new DefaultHtmlParserService());
@@ -28,34 +29,35 @@ export function createDefaultServiceContainer() {
   serviceContainer.register("modelCommandService", new DefaultModelCommandService());
   serviceContainer.register("demoProviderService", new SimpleDemoProviderService());
   serviceContainer.register("eventsService", new EventsService());
+  serviceContainer.register("designItemService", new DesignItemService());
+  serviceContainer.register("deletionService", new DeletionService());
 
   serviceContainer.register("undoService", (designerCanvas: IDesignerCanvas) => new UndoService(designerCanvas));
   serviceContainer.register("selectionService", (designerCanvas: IDesignerCanvas) => new SelectionService(designerCanvas, false));
-  serviceContainer.register("contentService", (designerCanvas: IDesignerCanvas) => new ContentService(designerCanvas.rootDesignItem));
   serviceContainer.register("designItemDocumentPositionService", (designerCanvas: IDesignerCanvas) => new DesignItemDocumentPositionService(designerCanvas));
-  serviceContainer.register("stylesheetService", designerCanvas => new CssToolsStylesheetService(designerCanvas));
+  serviceContainer.register("stylesheetService", designerCanvas => new CssParserStylesheetService(designerCanvas));
 
   serviceContainer.config.codeViewWidget = CodeViewMonaco;
 
   serviceContainer.designerExtensions.set(ExtensionType.Permanent, [
     new InvisibleElementExtensionProvider(),
+    new ConditionExtensionProvider(new DisplayGridExtensionProvider(), item => item.isRootItem)
   ]);
   serviceContainer.designerExtensions.set(ExtensionType.PrimarySelection, [
     new ConditionExtensionProvider(new ElementDragTitleExtensionProvider(), item => !(item.node instanceof SVGElement) || item.node instanceof SVGSVGElement),
-    new SvgElementExtensionProvider(),
     new ConditionExtensionProvider(new ResizeExtensionProvider(true), item => item.parent?.node instanceof HTMLElement && !getComputedStyle(item.parent.element).display.includes('grid')),
     new GridChildResizeExtensionProvider(),
     new ConditionExtensionProvider(new MultipleSelectionRectExtensionProvider(), item => !(item.node instanceof SVGElement) || item.node instanceof SVGSVGElement),
   ]);
   serviceContainer.designerExtensions.set(ExtensionType.PrimarySelectionAndCanBeEntered, [
-    new DisplayGridExtensionProvider(),
+    //new DisplayGridExtensionProvider(),
     new FlexboxExtensionProvider(),
   ]);
   serviceContainer.designerExtensions.set(ExtensionType.Selection, [
     new ConditionExtensionProvider(new SelectionDefaultExtensionProvider(), item => !(item.node instanceof SVGElement) || item.node instanceof SVGSVGElement),
   ]);
   serviceContainer.designerExtensions.set(ExtensionType.PrimarySelectionContainerAndCanBeEntered, [
-    new DisplayGridExtensionProvider('lightgray', '#8080802b'),
+    //new DisplayGridExtensionProvider('lightgray', '#8080802b'),
     new FlexboxExtensionProvider()
   ]);
   serviceContainer.designerExtensions.set(ExtensionType.MouseOver, [
@@ -69,14 +71,14 @@ export function createDefaultServiceContainer() {
   ]);
   serviceContainer.designerExtensions.set(ExtensionType.ContainerDragOverAndCanBeEntered, [
     new ApplyFirstMachingExtensionProvider(
-      new DisplayGridExtensionProvider(),
+      //new DisplayGridExtensionProvider(),
       new GrayOutDragOverContainerExtensionProvider(),
     ),
     new AltToEnterContainerExtensionProvider()
   ]);
   serviceContainer.designerExtensions.set(ExtensionType.ContainerExternalDragOverAndCanBeEntered, [
     new ApplyFirstMachingExtensionProvider(
-      new DisplayGridExtensionProvider(),
+      //new DisplayGridExtensionProvider(),
       new GrayOutDragOverContainerExtensionProvider(),
     ),
   ]);

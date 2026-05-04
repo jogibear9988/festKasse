@@ -14,23 +14,42 @@
     {
       "imports": {
         "ag-grid-community": "./node_modules/ag-grid-community/dist/package/main.esm.min.mjs",
+        "ag-grid-community/": "./node_modules/ag-grid-community/",
         "signal-polyfill": "./node_modules/signal-polyfill/dist/index.js",
+        
+        "monaco-editor": "./node_modules/monaco-editor/esm/vs/editor/editor.main.min.js",
+        "@node-projects/base-custom-webcomponent": "./node_modules/@node-projects/base-custom-webcomponent/dist/index-min.js",
+        "@node-projects/css-parser": "./node_modules/@node-projects/css-parser/dist/index-min.js",
+        "@node-projects/web-component-designer": "./node_modules/@node-projects/web-component-designer/dist/index-min.js",
+        "@node-projects/web-component-designer-widgets-wunderbaum": "./node_modules/@node-projects/web-component-designer-widgets-wunderbaum/dist/index-min.js",
+        "@node-projects/lean-he-esm": "./node_modules/@node-projects/lean-he-esm/lib/index-min.js",
+        "@node-projects/node-html-parser-esm": "./node_modules/@node-projects/node-html-parser-esm/dist/index-min.js",
+        "@node-projects/pickr-webcomponent": "./node_modules/@node-projects/pickr-webcomponent/lib/index-min.js",
+        "@node-projects/layout2vector": "./node_modules/@node-projects/layout2vector/dist/index-min.js",
+        "@node-projects/acad-ts": "./node_modules/@node-projects/acad-ts/dist/index-min.js",
+        "@node-projects/web-component-designer-collaboration-service": "./node_modules/@node-projects/web-component-designer-collaboration-service/dist/index-min.js",
+        "dock-spawn-ts": "./node_modules/dock-spawn-ts/lib/js/index-webcomponent-min.js",
+
+        "max_monaco-editor": "./node_modules/monaco-editor/esm/vs/editor/editor.main.js",
+        "max_@node-projects/base-custom-webcomponent": "./node_modules/@node-projects/base-custom-webcomponent/dist/index.js",
+        "max_@node-projects/css-parser": "./node_modules/@node-projects/css-parser/dist/index.js",
+        "max_@node-projects/web-component-designer": "./node_modules/@node-projects/web-component-designer/dist/index.js",
+        "max_@node-projects/web-component-designer-widgets-wunderbaum": "./node_modules/@node-projects/web-component-designer-widgets-wunderbaum/dist/index.js",
+        "max_@node-projects/lean-he-esm": "./node_modules/@node-projects/lean-he-esm/lib/index.js",
+        "max_@node-projects/node-html-parser-esm": "./node_modules/@node-projects/node-html-parser-esm/dist/index.js",
+        "max_@node-projects/pickr-webcomponent": "./node_modules/@node-projects/pickr-webcomponent/lib/index.js",
+        "max_@node-projects/layout2vector": "./node_modules/@node-projects/layout2vector/dist/index.js",
+        "max_@node-projects/acad-ts": "./node_modules/@node-projects/acad-ts/dist/index.js",
+        "max_@node-projects/web-component-designer-collaboration-service": "./node_modules/@node-projects/web-component-designer-collaboration-service/dist/index.js",
+        "max_dock-spawn-ts": "./node_modules/dock-spawn-ts/lib/js/index-webcomponent.js",
+
+        "@node-projects/": "./node_modules/@node-projects/",
         "monaco-editor/": "./node_modules/monaco-editor/",
-        "monaco-editor": "./node_modules/monaco-editor/esm/vs/editor/editor.main.js",
-        "@adobe/css-tools": "./node_modules/@adobe/css-tools/dist/index.mjs",
-        "dock-spawn-ts/": "./node_modules/dock-spawn-ts/",
-        "@node-projects/base-custom-webcomponent/": "./node_modules/@node-projects/base-custom-webcomponent/",
-        "@node-projects/base-custom-webcomponent": "./node_modules/@node-projects/base-custom-webcomponent/dist/index.js",
-        "@node-projects/web-component-designer": "./node_modules/@node-projects/web-component-designer/dist/index.js",
-        "@node-projects/web-component-designer/": "./node_modules/@node-projects/web-component-designer/",
-        "@node-projects/lean-he-esm/": "./node_modules/@node-projects/lean-he-esm/",
-        "@node-projects/node-html-parser-esm": "./node_modules/@node-projects/node-html-parser-esm/dist/index.js",
         "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "./node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/dist/service/htmlParserService/NodeHtmlParserService.js",
-        "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/": "./node_modules/@node-projects/web-component-designer-htmlparserservice-nodehtmlparser/",
         "@node-projects/web-component-designer-codeview-monaco": "./node_modules/@node-projects/web-component-designer-codeview-monaco/dist/widgets/codeView/code-view-monaco.js",
-        "@node-projects/web-component-designer-codeview-monaco/": "./node_modules/@node-projects/web-component-designer-codeview-monaco/",
-        "@node-projects/web-component-designer-stylesheetservice-css-tools": "./node_modules/@node-projects/web-component-designer-stylesheetservice-css-tools/dist/service/stylesheetservice/CssToolsStylesheetService.js",
-        "@node-projects/web-component-designer-stylesheetservice-css-tools/": "./node_modules/@node-projects/web-component-designer-stylesheetservice-css-tools/"
+        "@node-projects/web-component-designer-stylesheetservice-css-parser": "./node_modules/@node-projects/web-component-designer-stylesheetservice-css-parser/dist/service/stylesheetservice/CssParserStylesheetService.js",
+        "wunderbaum": "./node_modules/wunderbaum/dist/wunderbaum.esm.min.js",
+        "wunderbaum/": "./node_modules/wunderbaum/"
       }
     }
   </script>
@@ -52,16 +71,18 @@
     });
   </script>
 
-  <!-- if you use Moacco Editor -->
-  <script src="./node_modules/monaco-editor/min/vs/loader.js"></script>
-  <script>
-    require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs', 'vs/css': { disabled: true } } });
-    require(['vs/editor/editor.main'], () => { });    
-  </script>
-
+ 
   <script type="module">
-    importShim('./node_modules/@node-projects/web-component-designer/dist/index.js');
-    importShim('./dist/config/config.js');
+    window.MonacoEnvironment = {
+      getWorker: function (moduleId, label) {
+        if (label === 'editorWorkerService')
+          return new Worker('/node_modules/monaco-editor/esm/vs/editor/editor.worker.js', { type: 'module' });
+        return new Worker(`/node_modules/monaco-editor/esm/vs/editor/${label}.worker.js`, { type: 'module' });
+      }
+    };
+    // For debugging don't use minified version
+    //importShim('./dist/config/config.js');
+    importShim('./dist/config/config-min.js');
   </script>
 
   <style>
@@ -94,6 +115,7 @@
     dock-spawn-ts {
       height: calc(100% - 30px);
       width: 100%;
+      position: relative;
     }
   </style>
 </head>

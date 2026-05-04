@@ -1,6 +1,5 @@
 import { AbstractPropertiesService, IDesignItem, IProperty, IPropertyGroup, PropertyType } from "@node-projects/web-component-designer";
-import { ArticleTable } from "../../article-table.js";
-import { RefreshMode } from "@node-projects/web-component-designer/dist/elements/services/propertiesService/IPropertiesService.js";
+import { RefreshMode } from "@node-projects/web-component-designer";
 import { BookButton } from "../../../controls/book-button.js";
 import { ActionButton } from "../../../controls/action-button.js";
 import { applicationConfig } from "../../../applicationConfig.js";

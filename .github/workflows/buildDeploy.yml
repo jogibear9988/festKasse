@@ -46,6 +46,7 @@ jobs:
         npx copyfiles --verbose "assets/**/*.woff" build/default
         npx copyfiles --verbose "assets/**/*.woff2" build/default
         npx copyfiles --verbose "*.json" build/default
+        npx copyfiles --verbose "*.png" build/default
     #- name: Setup upterm session (for debugging, see https://github.com/marketplace/actions/debugging-with-ssh)
     #  uses: lhotari/action-upterm@v1
     - name: Deploy 🚀

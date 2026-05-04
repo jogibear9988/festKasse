@@ -3,5 +3,5 @@
   "short_name": "fest-kasse",
   "description": "fest-kasse",
   "start_url": "https://jogibear9988.github.io/festKasse/",
-  "display": "standalone"
+  "display": "fullscreen"
 }

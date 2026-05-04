@@ -241,22 +241,37 @@ async function newDocument(code: string, style: string) {
 }
 
 export async function openFileDialog(extension: string, multiple = false, readMode: 'binary' | 'text' = 'binary') {
-    return new Promise<{ name: string; data: string }[]>((resolve, reject) => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.style.display = 'none';
-        input.multiple = multiple;
-        if (extension) {
-            input.accept = extension;
-        }
-        document.body.appendChild(input);
-        input.click();
-        input.onchange = async (e) => {
-            const files = await readFiles(input.files, readMode);
-            document.body.removeChild(input);
-            resolve(files);
+    //@ts-ignore
+    if (window.showOpenFilePicker) {
+        const pickerOpts = {
+            id: "json",
+            types: { description: "JSON Files", accept: { "application/json": [".json"] } },
+            excludeAcceptAllOption: true,
+            multiple: false
         };
-    });
+
+        //@ts-ignore
+        const files: FileList = await window.showOpenFilePicker(pickerOpts);
+        return await readFiles(files, readMode);
+    }
+    else {
+        return new Promise<{ name: string; data: string }[]>((resolve, reject) => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.style.display = 'none';
+            input.multiple = multiple;
+            if (extension) {
+                input.accept = extension;
+            }
+            document.body.appendChild(input);
+            input.click();
+            input.onchange = async (e) => {
+                const files = await readFiles(input.files, readMode);
+                document.body.removeChild(input);
+                resolve(files);
+            };
+        });
+    }
 }
 
 export async function readFiles(files: FileList | File[], readMode: 'binary' | 'text' | 'url' = 'binary') {

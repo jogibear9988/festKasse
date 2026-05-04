@@ -1,7 +1,7 @@
 import { DocumentContainer, ExtensionType, PointerToolButtonProvider, PreDefinedElementsService, SelectorToolButtonProvider, SeperatorToolProvider, TransformToolButtonProvider, ZoomToolButtonProvider } from "@node-projects/web-component-designer";
 import createDefaultServiceContainer from "./setupDesigner.js";
 import '../controls/controls.js';
-import 'dock-spawn-ts/lib/js/webcomponent/DockSpawnTsWebcomponent.js';
+import 'dock-spawn-ts';
 import '@node-projects/web-component-designer';
 import './styleEditor.js';
 import './article-table.js';
@@ -129,7 +129,7 @@ const styleEditor = document.getElementById('styleEditor');
 paletteView.loadControls(serviceContainer, serviceContainer.elementsServices);
 propertyGrid.serviceContainer = serviceContainer;
 dock.dockManager.addLayoutListener({
-    onActiveDocumentChange: (manager, panel) => {
+    onActiveDocumentChange: async (manager, panel) => {
         if (panel) {
             let element = dock.getElementInSlot(panel.elementContent);
             if (element && element instanceof DocumentContainer) {
@@ -148,7 +148,7 @@ dock.dockManager.addLayoutListener({
         }
     }
 });
-function newDocument(code, style) {
+async function newDocument(code, style) {
     let screen = new DocumentContainer(serviceContainer);
     screen.title = "layout";
     screen.setAttribute('dock-spawn-panel-type', 'document');
@@ -159,7 +159,7 @@ function newDocument(code, style) {
             content: style
         }
     ];
-    const model = styleEditor.createModel(screen.additionalStylesheets[0].content);
+    const model = await styleEditor.createModel(screen.additionalStylesheets[0].content);
     screen.additionalData = { model: model };
     let timer;
     let disableTextChangedEvent = false;
@@ -336,11 +336,23 @@ function configPage() {
     at.setAttribute('dock-spawn-hide-close-button', '');
     dock.appendChild(at);
 }
-requestAnimationFrame(() => {
+requestAnimationFrame(async () => {
     if (applicationConfig.screens.length > 0)
-        newDocument(applicationConfig.screens[0].html, applicationConfig.screens[0].style);
+        await newDocument(applicationConfig.screens[0].html, applicationConfig.screens[0].style);
     else
-        newDocument('', style);
+        await newDocument(`
+<book-button article="aa" style="grid-area:1 / 1;"></book-button>
+<pay-control style="grid-area:4 / 6 / 9 / 9;"></pay-control>
+<display-price style="grid-area:1 / 6 / 2 / 9;"></display-price>
+<action-button action="print" style="grid-area:8 / 1 / 9 / 3;"></action-button>
+<action-button action="clear" style="grid-area:7 / 5 / 8 / 6;"></action-button>
+<display-remaining style="grid-area:2 / 6 / 3 / 9;"></display-remaining>
+<action-button action="storno" style="grid-area:8 / 5;"></action-button>
+<action-button action="open" style="grid-area:8 / 3 / 9 / 5;"></action-button>
+<book-button style="grid-area:2 / 1;"></book-button>
+<book-button style="grid-area:3 / 1;"></book-button>
+<book-button style="grid-area:4 / 1;"></book-button>
+`, style);
     articleTable();
     soldTable();
     configPage();

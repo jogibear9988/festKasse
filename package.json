@@ -6,7 +6,11 @@
   "scripts": {
     "tsc": "tsc",
     "start": "web-dev-server --open",
-    "build": "tsc"
+    "build": "tsc",
+    "bundleMonaco": "node _patchAndMinifyMonaco.js",
+    "postinstall": "npm run bundleMonaco",
+    "prepublishOnly": "npm run build && npm run bundle",
+    "bundle": "node _esbuild.js"
   },
   "repository": {
     "type": "git",
@@ -19,24 +23,26 @@
   },
   "homepage": "https://github.com/jogibear9988/festKasse#readme",
   "dependencies": {
-    "@adobe/css-tools": "^4.4.2",
-    "@node-projects/base-custom-webcomponent": "^0.29.0",
-    "@node-projects/lean-he-esm": "^3.3.0",
-    "@node-projects/node-html-parser-esm": "^6.2.0",
-    "@node-projects/web-component-designer": "^0.1.245",
-    "@node-projects/web-component-designer-codeview-monaco": "^0.1.33",
-    "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.11",
-    "@node-projects/web-component-designer-stylesheetservice-css-tools": "^0.1.10",
-    "ag-grid-community": "^33.1.1",
-    "dock-spawn-ts": "^3.2.1",
-    "es-module-shims": "^2.0.10",
+    "@node-projects/base-custom-webcomponent": "^0.46.0",
+    "@node-projects/css-parser": "^5.2.0",
+    "@node-projects/lean-he-esm": "^3.4.1",
+    "@node-projects/node-html-parser-esm": "^6.4.1",
+    "@node-projects/web-component-designer": "^0.2.11",
+    "@node-projects/web-component-designer-codeview-monaco": "^0.2.0",
+    "@node-projects/web-component-designer-htmlparserservice-nodehtmlparser": "^0.1.12",
+    "@node-projects/web-component-designer-stylesheetservice-css-parser": "^0.1.4",
+    "ag-grid-community": "^35.2.1",
+    "dock-spawn-ts": "^3.18.0",
+    "es-module-shims": "^2.8.0",
     "mobile-drag-drop": "^3.0.0-rc.0",
-    "monaco-editor": "^0.50.0",
+    "monaco-editor": "^0.55.1",
     "signal-polyfill": "^0.2.2",
-    "typescript": "^5.7.3"
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
-    "@types/node": "^22.13.5",
-    "@web/dev-server": "^0.4.6"
+    "@types/node": "^25.6.0",
+    "@web/dev-server": "^0.4.6",
+    "esbuild": "^0.28.0",
+    "esbuild-plugin-minify-html-literals": "^3.0.0"
   }
 }

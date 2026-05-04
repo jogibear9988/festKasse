@@ -1,6 +1,5 @@
 import EventEmitter from "./event-emitter.js";
 import CallbackQueue from "./callback-queue.js";
-import { sleep } from "@node-projects/web-component-designer/dist/elements/helper/Helper.js";
 
 const DeviceProfiles = [
 

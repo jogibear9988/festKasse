@@ -5,6 +5,7 @@ const contentToCache = [
     '/index.html',
     '/dist/runtime/runtime-worker.js',
 ];
+//@ts-ignore
 self.addEventListener('install', (e) => {
     console.log('[Service Worker] Install');
     e.waitUntil((async () => {
@@ -14,6 +15,7 @@ self.addEventListener('install', (e) => {
     })());
 });
 // Fetching content using Service Worker
+//@ts-ignore
 self.addEventListener('fetch', (e) => {
     // Cache http and https only, skip unsupported chrome-extension:// and file://...
     if (!(e.request.url.startsWith('http:') || e.request.url.startsWith('https:'))) {

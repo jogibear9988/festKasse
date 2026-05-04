@@ -1,10 +1,10 @@
 import { BaseCustomWebComponentConstructorAppend, html, css } from '@node-projects/base-custom-webcomponent';
 import { createGrid } from 'ag-grid-community';
-import '../../node_modules/ag-grid-community/dist/ag-grid-community.min.noStyle.js';
+import 'ag-grid-community';
 //@ts-ignore
-import style1 from '../../node_modules/ag-grid-community/styles/ag-grid.css' with { type: 'css' };
+import style1 from 'ag-grid-community/styles/ag-grid.css' with { type: 'css' };
 //@ts-ignore
-import style2 from '../../node_modules/ag-grid-community/styles/ag-theme-balham.css' with { type: 'css' };
+import style2 from 'ag-grid-community/styles/ag-theme-balham.css' with { type: 'css' };
 import { applicationConfig, saveConfig } from '../applicationConfig.js';
 import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions, ClientSideRowModelModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);

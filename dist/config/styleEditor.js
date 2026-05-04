@@ -1,4 +1,5 @@
 import { BaseCustomWebComponentConstructorAppend, css, html } from "@node-projects/base-custom-webcomponent";
+import { CodeViewMonaco } from "@node-projects/web-component-designer-codeview-monaco";
 export class StyleEditor extends BaseCustomWebComponentConstructorAppend {
     static style = css `
         :host {
@@ -14,8 +15,8 @@ export class StyleEditor extends BaseCustomWebComponentConstructorAppend {
     static template = html `
         <div id="container" style="width: 100%; height: 100%; position: absolute;"></div>
     `;
-    createModel(text) {
-        //@ts-ignore
+    async createModel(text) {
+        const monaco = await CodeViewMonaco.getMonacoLib();
         return monaco.editor.createModel(text, 'css');
     }
     _model;
@@ -38,18 +39,6 @@ export class StyleEditor extends BaseCustomWebComponentConstructorAppend {
         super();
         this._restoreCachedInititalValues();
     }
-    static _initPromise;
-    static initMonacoEditor() {
-        this._initPromise = new Promise(async (resolve) => {
-            //@ts-ignore
-            require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs', 'vs/css': { disabled: true } } });
-            //@ts-ignore
-            require(['vs/editor/editor.main'], () => {
-                resolve(undefined);
-            });
-        });
-        return StyleEditor._initPromise;
-    }
     async ready() {
         this._parseAttributesToProperties();
         //@ts-ignore
@@ -57,8 +46,7 @@ export class StyleEditor extends BaseCustomWebComponentConstructorAppend {
         //@ts-ignore
         this.shadowRoot.adoptedStyleSheets = [style.default, this.constructor.style];
         this._container = this._getDomElement('container');
-        await StyleEditor.initMonacoEditor();
-        //@ts-ignore
+        const monaco = await CodeViewMonaco.getMonacoLib();
         this._editor = monaco.editor.create(this._container, {
             automaticLayout: true,
             language: 'css',

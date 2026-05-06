@@ -9,9 +9,9 @@ import style2 from 'ag-grid-community/styles/ag-theme-balham.css'with { type: 'c
 import { applicationConfig } from '../applicationConfig.js';
 import { getSoldConfig, clearSoldConfig } from '../applicationStateStorage.js';
 
-import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions,ClientSideRowModelModule } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions, ClientSideRowModelModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
-provideGlobalGridOptions({ theme: "legacy"});
+provideGlobalGridOptions({ theme: "legacy" });
 
 export class SoldTable extends BaseCustomWebComponentConstructorAppend {
 
@@ -43,6 +43,7 @@ export class SoldTable extends BaseCustomWebComponentConstructorAppend {
 
     private _gridDiv: HTMLDivElement;
     private _grid: GridApi<any>;
+    private _options: GridOptions<any>;
     private _clear: HTMLButtonElement;
     private _data: any;
 
@@ -89,6 +90,7 @@ export class SoldTable extends BaseCustomWebComponentConstructorAppend {
             ],
             rowData: this._data
         }
+        this._options = options;
         this._grid = createGrid(this._gridDiv, options);
 
         this._clear = this._getDomElement<HTMLButtonElement>('clear');
@@ -102,6 +104,10 @@ export class SoldTable extends BaseCustomWebComponentConstructorAppend {
 
     clear() {
         clearSoldConfig();
+        const solds = getSoldConfig();
+        const app = applicationConfig.articles;
+        this._data = app.map(x => ({ name: x.name, price: (x.price / 100).toFixed(2), count: solds.find(y => y.key == x.key)?.count ?? 0, sum: (x.price * (solds.find(y => y.key == x.key)?.count ?? 0) / 100).toFixed(2) }));
+        this._grid.setGridOption('rowData', this._data);
     }
 }
 customElements.define(SoldTable.is, SoldTable);

@@ -238,6 +238,14 @@ async function newDocument(code: string, style: string) {
             setConfig(data);
         }
     }
+    const cmdBack = document.getElementById('back') as HTMLButtonElement;
+    cmdBack.onclick = async () => {
+        location.href = 'index.html';
+    }
+    const cmdReload = document.getElementById('reload') as HTMLButtonElement;
+    cmdReload.onclick = async () => {
+        location.reload();
+    }
 }
 
 export async function openFileDialog(extension: string, multiple = false, readMode: 'binary' | 'text' = 'binary') {

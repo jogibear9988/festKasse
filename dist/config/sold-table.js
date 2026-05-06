@@ -35,6 +35,7 @@ export class SoldTable extends BaseCustomWebComponentConstructorAppend {
     static properties = {};
     _gridDiv;
     _grid;
+    _options;
     _clear;
     _data;
     constructor() {
@@ -74,6 +75,7 @@ export class SoldTable extends BaseCustomWebComponentConstructorAppend {
             ],
             rowData: this._data
         };
+        this._options = options;
         this._grid = createGrid(this._gridDiv, options);
         this._clear = this._getDomElement('clear');
         this._clear.onclick = () => this.clear();
@@ -84,6 +86,10 @@ export class SoldTable extends BaseCustomWebComponentConstructorAppend {
     }
     clear() {
         clearSoldConfig();
+        const solds = getSoldConfig();
+        const app = applicationConfig.articles;
+        this._data = app.map(x => ({ name: x.name, price: (x.price / 100).toFixed(2), count: solds.find(y => y.key == x.key)?.count ?? 0, sum: (x.price * (solds.find(y => y.key == x.key)?.count ?? 0) / 100).toFixed(2) }));
+        this._grid.setGridOption('rowData', this._data);
     }
 }
 customElements.define(SoldTable.is, SoldTable);

@@ -216,6 +216,14 @@ async function newDocument(code, style) {
             setConfig(data);
         }
     };
+    const cmdBack = document.getElementById('back');
+    cmdBack.onclick = async () => {
+        location.href = 'index.html';
+    };
+    const cmdReload = document.getElementById('reload');
+    cmdReload.onclick = async () => {
+        location.reload();
+    };
 }
 export async function openFileDialog(extension, multiple = false, readMode = 'binary') {
     //@ts-ignore
